@@ -1,0 +1,11 @@
+The modified code includes a new hashing function, String.hashCode(), which can be called on any string object and return a unique hash.
+This function is tested with the string "revenue" as seen in the StackOverflow resource from which I borrowed it, and the result is logged to Console.log().
+After verifying that the hash function worked as intended, I used it within the Chrome Developer Tools JavaScript console to generate hashes for the previously plain-text passwords in the code.
+I then modified the "users" array to instead hold these hashed values, rather than the plaintext passwords.
+Next, I refactored the function attached to the EventListener for the "submit" event to utilize this new hashing algorithm and compare the hash of the provided input to the hash value stored in the "users" array.
+
+At first, I ran into an issue where even though it was generating matching hashes, the program wouldn't equate the values.
+I realized that this was due to the strict equality operator's use in the comparison, which equates both type and value. Because the hash code is a value produced by the hashCode() function, it isn't the same as the raw string in the "users" array.
+By changing the '===' operator to the looser '==' operator in the comparison of the hash values, I was able to implement a working password-hashing system.
+
+Now, passwords are no longer stored in hardcoded plaintext, and input is instead hashed on-the-fly for comparison.
