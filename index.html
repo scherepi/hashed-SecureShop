@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Login page</title>
+	</head>
+	<body>
+		<h1>Welcome to (hashed) SecureShop</h1>
+		<p>Please log in to access your account:</p>
+		<form id="loginForm">
+			<label for="username">Username:</label>
+			<input type="text" id="username" name="username" required>
+			<br>
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" required>
+			<br>
+			<button type="submit">Login</button>
+		</form>
+		<p id="in"></p>
+		<script>
+			// Simulated user database
+			const users = [
+				{ username: "admin", password: "46792755" },
+				{ username: "user", password: "1216985755" }
+			];
+
+			// Hashing function
+			// As found on stackoverflow.com/questions/7616461/generate-a-hash-from-a-string-in-javascript
+			String.prototype.hashCode = function() {
+				var hash = 0,
+					i, chr;
+				if (this.length === 0) return hash;
+				for (i = 0; i < this.length; i++) {
+					chr = this.charCodeAt(i);
+					hash = ((hash << 5) - hash) + chr;
+					hash |= 0; // Convert to 32bit integer
+				}
+				return hash;
+			}
+			// Hash test
+			const str = "revenue"
+			console.log(str, str.hashCode())
+			
+			// Handle login
+			document.getElementById("loginForm").addEventListener("submit", function(event) {
+				event.preventDefault()
+				const username = document.getElementById("username").value;
+				const password = document.getElementById("password").value;
+				let passHash = password.hashCode();
+				console.log("Looking for password hash " + passHash);
+
+				// Vulnerable login logic
+				const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+				console.log("Query:", query);
+
+				const user = users.find(user => user.username === username && user.password == passHash);
+
+				if (user) {
+					alert("Login successful! Welcome, " + username);
+					//document.getElementById("in").innerHTML = "Entered succesfully";	
+				} else {
+					alert("Invalid username or password");
+					//document.getElementById("in").innerHTML = "Failed to enter";
+				}
+			});
+			
+		</script>
+	</body>
+</html>
